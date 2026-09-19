@@ -1,0 +1,8 @@
+{
+  "required": true,
+  "package": "ca.dnamobile.droidbridgelan.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "mixins": ["ServerConnectionListenerMixin"],
+  "injectors": {"defaultRequire": 1}
+}

@@ -1,0 +1,11 @@
+.gradle/
+build/
+out/
+.idea/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+Thumbs.db
+/native/netty-incubator-codec-quic-0.0.74.Final.e4mc.1/**/target/
+/native/netty-incubator-codec-quic-0.0.74.Final.e4mc.1/**/.cargo/

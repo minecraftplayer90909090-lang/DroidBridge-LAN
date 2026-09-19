@@ -1,0 +1,88 @@
+plugins {
+    id 'java'
+}
+
+group = 'ca.dnamobile'
+version = project.findProperty('mod_version') ?: '0.4.1'
+
+base {
+    archivesName = 'DroidBridge-LAN-Fabric-26.1.x'
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.fabricmc.net/' }
+}
+
+dependencies {
+    // DroidBridge LAN does not bundle e4mc. CurseForge/GitHub users install the
+    // official e4mc mod separately as a required dependency.
+    compileOnly "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    compileOnly "net.fabricmc:sponge-mixin:${project.mixin_version}"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 17
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+jar {
+    archiveFileName = "DroidBridge-LAN-Fabric-26.1.x-${project.version}.jar"
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes(
+                'Implementation-Title': 'DroidBridge LAN',
+                'Implementation-Version': project.version,
+                'Built-By': 'DNA Mobile'
+        )
+    }
+}
+
+tasks.register('verifyReleaseJar') {
+    dependsOn jar
+    doLast {
+        def artifact = tasks.jar.archiveFile.get().asFile
+        def required = [
+                'fabric.mod.json',
+                'droidbridge-lan.mixins.json',
+                'assets/droidbridgelan/icon.png',
+                'META-INF/droidbridge/android-arm64-v8a/libnetty_quiche.so',
+                'META-INF/licenses/netty-Apache-2.0.txt',
+                'META-INF/licenses/quiche-BSD.txt',
+                'META-INF/licenses/boringssl-LICENSE.txt'
+        ]
+        new java.util.zip.ZipFile(artifact).withCloseable { zip ->
+            required.each { name ->
+                if (zip.getEntry(name) == null) throw new GradleException("Missing release entry: ${name}")
+            }
+            if (zip.getEntry('META-INF/jars/e4mc-fabric-6.2.1-modern-droidbridge.jar') != null) {
+                throw new GradleException('Release must not bundle a modified e4mc JAR')
+            }
+            def bundledE4mcClass = zip.entries().find { it.name.startsWith('link/e4mc/') }
+            if (bundledE4mcClass != null) {
+                throw new GradleException("Release must not redistribute e4mc classes: ${bundledE4mcClass.name}")
+            }
+            def modJson = zip.getInputStream(zip.getEntry('fabric.mod.json')).getText('UTF-8')
+            if (!modJson.contains('"e4mc"') || !modJson.contains('DroidBridgeLanPreLaunch')) {
+                throw new GradleException('Release metadata must require e4mc and register preLaunch compatibility')
+            }
+        }
+        println "Verified standalone add-on ${artifact}"
+    }
+}
+
+build.dependsOn 'verifyReleaseJar'

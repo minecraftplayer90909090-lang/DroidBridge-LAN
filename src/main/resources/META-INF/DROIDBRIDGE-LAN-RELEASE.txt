@@ -1,0 +1,7 @@
+DroidBridge LAN 0.4.1
+Independent DroidBridge Android compatibility add-on by DNA Mobile.
+
+Requires the official e4mc mod as a separate Fabric dependency.
+This JAR does not contain or modify e4mc classes.
+
+See META-INF/THIRD_PARTY_NOTICES.md and META-INF/licenses/ for bundled native-library notices.

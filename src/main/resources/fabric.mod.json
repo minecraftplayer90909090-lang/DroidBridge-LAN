@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "droidbridge_lan",
+  "version": "0.4.1",
+  "name": "DroidBridge LAN",
+  "icon": "assets/droidbridgelan/icon.png",
+  "description": "Android compatibility add-on for using the official e4mc mod with DroidBridge. Provides the matching Android Netty-Quiche native, protects against truncated e4mc configs after abrupt device shutdowns, and applies Android-only runtime compatibility without modifying or bundling e4mc.",
+  "authors": ["DNA Mobile"],
+  "contact": {
+    "sources": "https://github.com/REPLACE-WITH-YOUR-GITHUB/DroidBridge-LAN",
+    "issues": "https://github.com/REPLACE-WITH-YOUR-GITHUB/DroidBridge-LAN/issues"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "preLaunch": ["ca.dnamobile.droidbridgelan.DroidBridgeLanPreLaunch"],
+    "main": ["ca.dnamobile.droidbridgelan.DroidBridgeLanMod"]
+  },
+  "mixins": ["droidbridge-lan.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "fabric-api": "*",
+    "minecraft": ">=26.1-",
+    "e4mc": ">=6.2.1"
+  }
+}

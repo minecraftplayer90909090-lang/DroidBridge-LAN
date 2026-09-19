@@ -1,0 +1,11 @@
+DroidBridge LAN 0.4.1 test fix
+
+Cause fixed:
+0.4.0 loaded libnetty_quiche.so from the Fabric/Knot classloader before DroidBridge LibPatcher's e4mc bridge ran. LibPatcher then tried to load the same native from its system-classloader context, Android rejected the duplicate classloader ownership, and the bridge fell back to the obsolete adapted/glibc native path.
+
+0.4.1 behavior:
+- DroidBridge LAN stages and SHA-256 verifies the Android libnetty_quiche.so.
+- It sets link.e4mc.native_path.
+- It DOES NOT call System.load itself.
+- DroidBridge LibPatcher owns the actual native load exactly once when stock e4mc initializes Quiche.
+- Official e4mc stays external and unmodified.
