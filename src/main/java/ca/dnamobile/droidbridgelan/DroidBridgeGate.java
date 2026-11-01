@@ -7,8 +7,8 @@ import java.util.Locale;
  * Keeps DroidBridge-specific native/bootstrap behavior out of unrelated Java runtimes.
  */
 final class DroidBridgeGate {
-    static final String RELEASE_PACKAGE = "com.abhaythemaster.masterixplus";
-    static final String DEBUG_PACKAGE = "com.abhaythemaster.masterixplus.debug";
+    static final String RELEASE_PACKAGE = "com.abhaythemaster.masterix";
+    static final String DEBUG_PACKAGE = "com.abhaythemaster.masterix.debug";
 
     private DroidBridgeGate() {}
 
